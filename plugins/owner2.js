@@ -15,7 +15,7 @@ cmd({
 },
 async (conn, mek, m, { from }) => {
     try {
-        const ownerNumber = config.OWNER_NUM;
+        const ownerNumber = config.OWNER_NUMBER;
         const ownerName = config.OWNER_NAME;
 
         // Use CRLF line breaks for vCard formatting

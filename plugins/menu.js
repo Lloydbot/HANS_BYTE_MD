@@ -64,7 +64,7 @@ cmd(
 ┃◈╭──────────────·๏
 ┃◈┃• 👑 Owner : *${config.OWNER_NAME}*
 ┃◈┃• ⚙️ Prefix : *[${config.PREFIX}]*
-┃◈┃• 📱 Number : *${config.OWNER_NUM}*
+┃◈┃• 📱 Number : *${config.OWNER_NUMBER}*
 ┃◈┃• ★ Created by : *𝐇𝐀𝐍𝐒 TECH*
 ┃◈┃• 📅 Date : *${new Date().toLocaleDateString()}*
 ┃◈┃• ⏰ Time : *${new Date().toLocaleTimeString()}*

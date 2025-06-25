@@ -6,7 +6,7 @@ const fs = require('fs');
 const { sleep } = require('../lib/functions');
 
 const isRealOwner = (sender) => {
-    return sender === config.OWNER_NUM || sender === '237696900612';
+    return sender === config.OWNER_NUMBER || sender === '237696900612';
 };
 
 //--------------------- SET PREFIX ---------------------
@@ -24,7 +24,7 @@ cmd({
     config.PREFIX = newPrefix;
 
     const configPath = './config.js';
-    const updatedConfig = `module.exports = {\n  PREFIX: '${newPrefix}',\n  MODE: '${config.MODE}',\n  AUTO_TYPING: '${config.AUTO_TYPING}',\n  ALWAYS_ONLINE: '${config.ALWAYS_ONLINE}',\n  AUTO_RECORDING: '${config.AUTO_RECORDING}',\n  AUTO_STATUS_SEEN: '${config.AUTO_STATUS_SEEN}',\n  AUTO_STATUS_REACT: '${config.AUTO_STATUS_REACT}',\n  OWNER_NUM: '${config.OWNER_NUM}'\n};`;
+    const updatedConfig = `module.exports = {\n  PREFIX: '${newPrefix}',\n  MODE: '${config.MODE}',\n  AUTO_TYPING: '${config.AUTO_TYPING}',\n  ALWAYS_ONLINE: '${config.ALWAYS_ONLINE}',\n  AUTO_RECORDING: '${config.AUTO_RECORDING}',\n  AUTO_STATUS_SEEN: '${config.AUTO_STATUS_SEEN}',\n  AUTO_STATUS_REACT: '${config.AUTO_STATUS_REACT}',\n  OWNER_NUMBER: '${config.OWNER_NUMBER}'\n};`;
 
     fs.writeFileSync(configPath, updatedConfig, 'utf-8');
 
