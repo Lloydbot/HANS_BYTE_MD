@@ -1,7 +1,7 @@
 FROM node:lts-buster
 
 # Clone your GitHub repository into /root/hansbyte
-RUN git clone https://github.com/HaroldMth/HANS_BYTE_MD_MD /root/hansbyte
+RUN git clone https://github.com/HaroldMth/HANS_BYTE_MD /root/hansbyte
 
 # Set working directory
 WORKDIR /root/hansbyte
