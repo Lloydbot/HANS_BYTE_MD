@@ -1,62 +1,60 @@
-const axios = require('axios');
-const config = require('../config')
-const {cmd , commands} = require('../command')
-const googleTTS = require('google-tts-api')
+const { cmd } = require('../command');
+const fetch = require('node-fetch');
 
-cmd({
-    pattern: "trt",
-    alias: ["translate"],
-    desc: "🌍 Translate text between languages",
-    react: "⚡",
-    category: "other",
-    filename: __filename
-},
-async (conn, mek, m, { from, q, reply }) => {
-    try {
-        const args = q.split(' ');
-        if (args.length < 2) return reply("❗ Please provide a language code and text. Usage: .translate [language code] [text]");
-
-        const targetLang = args[0];
-        const textToTranslate = args.slice(1).join(' ');
-
-        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(textToTranslate)}&langpair=en|${targetLang}`;
-
-        const response = await axios.get(url);
-        const translation = response.data.responseData.translatedText;
-
-        const translationMessage = `> *JAWADTECHX-KHANX-TRANSLATION*
-
-> 🔤 *Original*: ${textToTranslate}
-
-> 🔠 *Translated*: ${translation}
-
-> 🌐 *Language*: ${targetLang.toUpperCase()}`;
-
-        return reply(translationMessage);
-    } catch (e) {
-        console.log(e);
-        return reply("⚠️ An error occurred data while translating the your text. Please try again later🤕");
-    }
-});
-
-//____________________________TTS___________________________
 cmd({
     pattern: "tts",
-    desc: "download songs",
-    category: "download",
-    react: "👧",
+    alias: ["text2speech", "say"],
+    react: "🗣️",
+    desc: "🔊 𝗖𝗼𝗻𝘃𝗲𝗿𝘁 𝗧𝗲𝘅𝘁 𝘁𝗼 𝗦𝗽𝗲𝗲𝗰𝗵",
+    category: "📁 𝗨𝘁𝗶𝗹𝗶𝘁𝗶𝗲𝘀",
     filename: __filename
 },
-async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if(!q) return reply("Need some text.")
-    const url = googleTTS.getAudioUrl(q, {
-  lang: 'hi-IN',
-  slow: false,
-  host: 'https://translate.google.com',
-})
-await conn.sendMessage(from, { audio: { url: url }, mimetype: 'audio/mpeg', ptt: true }, { quoted: mek })
-    }catch(a){
-reply(`${a}`)
-}
-})
+async (conn, mek, m, { from, q, reply, sender }) => {
+    try {
+        // Debug: log the input to see if q is being passed correctly.
+        console.log("Received input:", q);
+        
+        if (!q || q.trim().length === 0) {
+            // Fallback: if reply isn't working, use conn.sendMessage directly.
+            const errorMsg = "❌ *𝙋𝙡𝙚𝙖𝙨𝙚 𝙥𝙧𝙤𝙫𝙞𝙙𝙚 𝙩𝙚𝙭𝙩 𝙩𝙤 𝙘𝙤𝙣𝙫𝙚𝙧𝙩 𝙞𝙣𝙩𝙤 𝙨𝙥𝙚𝙚𝙘𝙝!* ❌";
+            if (typeof reply === 'function') {
+                return reply(errorMsg);
+            } else {
+                return conn.sendMessage(from, { text: errorMsg }, { quoted: mek });
+            }
+        }
+        
+        const voice = "Bianca"; // You can customize this
+        const res = await fetch(`https://apis.davidcyriltech.my.id/tts?text=${encodeURIComponent(q)}&voice=${voice}`);
+        const data = await res.json();
+        
+        if (!data.success) return reply("❌ *𝙁𝙖𝙞𝙡𝙚𝙙 𝙩𝙤 𝙜𝙚𝙣𝙚𝙧𝙖𝙩𝙚 𝙏𝙏𝙎.* ❌");
+        
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+        
+        await conn.sendMessage(
+            from, 
+            { 
+                audio: { url: data.audioUrl }, 
+                mimetype: "audio/mpeg", 
+                fileName: "TTS-Output.mp3", 
+                caption: "✅ *𝗧𝗲𝘅𝘁 𝗰𝗼𝗻𝘃𝗲𝗿𝘁𝗲𝗱 𝘁𝗼 𝘀𝗽𝗲𝗲𝗰𝗵 𝘀𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆!* ✅\n🔰 *𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 𝗛𝗮𝗻𝘀 𝗕𝐲𝘁𝗲 𝗠𝗗* ⚡",
+                contextInfo: newsletterContext
+            },
+            { quoted: mek }
+        );
+        
+    } catch (e) {
+        console.error(e);
+        reply("❌ *𝘼𝙣 𝙚𝙧𝙧𝙤𝙧 𝙤𝙘𝙘𝙪𝙧𝙧𝙚𝙙 𝙬𝙝𝙞𝙡𝙚 𝙜𝙚𝙣𝙚𝙧𝙖𝙩𝙞𝙣𝙜 𝙏𝙏𝙎.* ❌");
+    }
+});

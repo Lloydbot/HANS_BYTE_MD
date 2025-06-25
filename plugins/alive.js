@@ -1,47 +1,69 @@
-const { cmd, commands } = require('../command');
-const os = require("os");
-const { runtime } = require('../lib/functions');
+const { cmd } = require('../command');
 
-cmd({
-    pattern: "alive",
-    alias: ["status", "runtime", "uptime"],
-    desc: "Check uptime and system status",
-    category: "main",
-    react: "📟",
-    filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+cmd(
+  {
+    pattern: "calendar",
+    alias: "cal",
+    desc: "Show calendar of current or given month & year (GMT).",
+    react: "🗓️",
+    category: "utilities",
+    filename: __filename,
+  },
+  async (
+    robin,
+    mek,
+    m,
+    { from, q, sender, reply }
+  ) => {
     try {
-        // Generate system status message
-        const status = `╭━━〔 *KHAN-MD* 〕━━┈⊷
-┃◈╭─────────────·๏
-┃◈┃• *⏳Uptime*:  ${runtime(process.uptime())} 
-┃◈┃• *📟 Ram usage*: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${(os.totalmem() / 1024 / 1024).toFixed(2)}MB
-┃◈┃• *⚙️ HostName*: ${os.hostname()}
-┃◈┃• *👨‍💻 Owner*: Jawad TechX
-┃◈┃• *🧬 Version*: 3.0.0 BETA
-┃◈└───────────┈⊷
-╰──────────────┈⊷
-> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ Jᴀᴡᴀᴅ TᴇᴄʜX`;
+      // Parse args from .calendar 6 2025
+      let [month, year] = q.trim().split(" ").map(Number);
+      const now = new Date();
 
-        // Send the status message with an image
-        await conn.sendMessage(from, { 
-            image: { url: `https://files.catbox.moe/juroe8.jpg` },  // Image URL
-            caption: status,
-            contextInfo: {
-                mentionedJid: [m.sender],
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363354023106228@newsletter',
-                    newsletterName: 'JawadTechX',
-                    serverMessageId: 143
-                }
-            }
-        }, { quoted: mek });
+      // Defaults to GMT date
+      if (!month || isNaN(month) || month < 1 || month > 12)
+        month = now.getUTCMonth() + 1;
+      if (!year || isNaN(year) || year < 1000)
+        year = now.getUTCFullYear();
+
+      const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+      const firstDay = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+      const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+      let output = `🗓️ *Calendar for ${month}/${year} (GMT)*\n\`\`\`\n`;
+      output += days.join(" ") + "\n";
+
+      let week = "   ".repeat(firstDay);
+      for (let day = 1; day <= daysInMonth; day++) {
+        week += day.toString().padStart(2, ' ') + " ";
+        if ((firstDay + day) % 7 === 0 || day === daysInMonth) {
+          output += week + "\n";
+          week = "";
+        }
+      }
+      output += "```";
+
+      // Newsletter context
+      const newsletterContext = {
+        mentionedJid: [sender],
+        forwardingScore: 1000,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+          newsletterJid: '120363292876277898@newsletter',
+          newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+          serverMessageId: 147,
+        },
+      };
+
+      // Send calendar
+      await robin.sendMessage(from, {
+        text: output,
+        contextInfo: newsletterContext,
+      }, { quoted: mek });
 
     } catch (e) {
-        console.error("Error in alive command:", e);
-        reply(`An error occurred: ${e.message}`);
+      console.error("Calendar command error:", e);
+      reply("❌ Error generating calendar. " + e.message);
     }
-});
+  }
+);

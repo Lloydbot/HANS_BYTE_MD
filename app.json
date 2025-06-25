@@ -1,11 +1,28 @@
 {
-  "name": "KHAN-MD",
-  "description": "Javascript WhatsApp bot made by Jᴀᴡᴀᴅ TᴇᴄʜX",
-  "logo": "https://raw.githubusercontent.com/JawadYTX/KHAN-DATA/refs/heads/main/logo/KHAN.png",
-  "keywords": ["KHAN-MD"],
+  "name": "HANS_BYTE",
+  "description": "WhatsApp bot for automated stuff",
+  "logo": "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png",
+  "keywords": [
+    "nodejs",
+    "bot",
+    "media-processing",
+    "auto-reaction",
+    "whatsapp-bot",
+    "telegram-bot",
+    "automation",
+    "whatsapp",
+    "chatbot",
+    "sticker-generator",
+    "movie-api",
+    "HANS BYTE MD",
+    "HANS BYTE MD",
+    "HANS BYTE MD",
+    "HANS BYTE MD 2.0"
+  ],
+  
   "success_url": "/",
 
-    "stack": "container",
+  "stack": "container",
   "env": {
     "SESSION_ID": {
       "description": "Put the session-id here.",
@@ -14,33 +31,31 @@
     },  
     
     "STICKER_NAME": {
-      "description": "type your sticker pack name.",
+      "description": "Type your sticker pack name.",
       "required": false,
-      "value": "KHAN-MD"
+      "value": "HANS BYTE MD"
     }, 
       
     "PREFIX": {
-      "description": "paste your bot prefix note! Don't apply null prefix.",
+      "description": "Paste your bot prefix note! Don't apply null prefix.",
       "required": false,
       "value": "."
     },
     
     "MODE": {
-      "description": "select your bot work type public-private-inbox-group.",
+      "description": "Select your bot work type public-private-inbox-group.",
       "required": false,
       "value": "public"
-      
     },
     
-    
     "ALWAYS_ONLINE": {
-      "description": "Make it true if want always online.",
+      "description": "Make it true if you want always online.",
       "required": false,
       "value": "false"  
     },    
   
     "AUTO_VOICE": {
-      "description": "Make it true if want automatic voice reply .",
+      "description": "Make it true if you want automatic voice reply.",
       "required": false,
       "value": "false"
     }, 
@@ -57,7 +72,6 @@
       "value": "false"
     }, 
 
-
     "AUTO_STATUS_SEEN": {
       "description": "Make it true for automatic status seen.",
       "required": true,
@@ -65,7 +79,7 @@
     }, 
 
     "AUTO_STATUS_REACT": {
-      "description": "make it true for automatic status reaction or like.",
+      "description": "Make it true for automatic status reaction or like.",
       "required": true,
       "value": "true"
     }, 
@@ -79,35 +93,31 @@
     "AUTO_STATUS_MSG": {
       "description": "Type custom message on status reply",
       "required": true,
-      "value": "*SEEN YOUR STATUS BY KHAN-MD 🖤*"
-   
-     }, 
+      "value": "✨ *SEEN YOUR STATUS BY HΛNS BYTΞ MD* ✨"
+    }, 
     
     "OWNER_NAME": {
       "description": "Type Bot Owner Name.",
       "required": false,
-      "value": "Jᴀᴡᴀᴅ TᴇᴄʜX"
-}, 
+      "value": "HΛNS BYTΞ MD"
+    }, 
 
     "OWNER_NUMBER": {
-      "description": "put the owner number for bot.",
+      "description": "Put the owner number for bot.",
       "required": false,
-      "value": "92310344XXXX"
-
+      "value": "23769690XXXX"
     }, 
 
     "BOT_NAME": {
       "description": "Type here the bot name.",
       "required": false,
-      "value": "KHAN-MD"
-
-      }, 
+      "value": "HΛNS BYTΞ MD"
+    }, 
 
     "ANTI_LINK": {
       "description": "Make it true if you want bot auto remove group link.",
       "required": true,
       "value": "true"
-      
     },
     
     "ANTI_BAD": {
@@ -116,20 +126,20 @@
       "value": "false"
     }, 
 
-     "DESCRIPTION": {
-      "description": "add caption for menu and other",
+    "DESCRIPTION": {
+      "description": "Add caption for menu and other",
       "required": false,
-      "value": "*© ᴘᴏᴡᴇʀᴇᴅ ʙʏ Jᴀᴡᴀᴅ TᴇᴄʜX*"
+      "value": "HΛNS BYTΞ MD"
     },
 
-      "DELETE_LINKS": {
-      "description": "remove links from group automatically without removing member",
+    "DELETE_LINKS": {
+      "description": "Remove links from group automatically without removing member",
       "required": false,
       "value": "true"
     },
     
     "AUTO_RECORDING": {
-      "description": "Make it true if you want auto recoding.",
+      "description": "Make it true if you want auto recording.",
       "required": false,
       "value": "false"
     },
@@ -150,17 +160,16 @@
       "description": "Make it true if you want custom reactions.",
       "required": false,
       "value": "false"
-      
     }, 
     
     "CUSTOM_REACT_EMOJIS": {
-      "description": "put here custom react react emojis.",
+      "description": "Put here custom react emojis.",
       "required": false,
       "value": "💝,💖,💗,❤️‍🩹,❤️,🧡,💛,💚,💙,💜,🤎,🖤,🤍"
     }, 
     
     "ANTI_DEL_PATH": {
-      "description": "change it to -same- if you want to resend deleted message in same chat",
+      "description": "Change it to -same- if you want to resend deleted message in same chat",
       "required": false,
       "value": "log"
     }, 
@@ -171,13 +180,12 @@
       "value": "false"
     }
 
-},
+  },
 
-     "buildpacks": [
-        {
-            "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
-        }
-     ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
+    }
+  ],
   "stack": "heroku-24"
 }
-  

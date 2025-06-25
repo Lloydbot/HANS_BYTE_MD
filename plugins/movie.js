@@ -1,11 +1,11 @@
 const axios = require('axios');
-const { cmd } = require('../command');
-const config = require('../config'); // Ensure your API key is in config
+ const { cmd } = require('../command');
+const config = require('../config');// Ensure your API key is in config
 
 cmd({
     pattern: "movie",
     desc: "Fetch detailed information about a movie.",
-    category: "utility",
+    category: "other",
     react: "🎬",
     filename: __filename
 },
@@ -13,7 +13,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
     try {
         const movieName = args.join(' ');
         if (!movieName) {
-            return reply("📽️ Please provide the name of the movie.");
+            return reply("Please provide the movie name :).");
         }
 
         const apiUrl = `http://www.omdbapi.com/?t=${encodeURIComponent(movieName)}&apikey=${config.OMDB_API_KEY}`;
@@ -42,6 +42,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 🏆 *Awards:* ${data.Awards}
 ⭐ *IMDB Rating:* ${data.imdbRating}
 🗳️ *IMDB Votes:* ${data.imdbVotes}
+> Type ${config.PREFIX}moviedl to download films
 `;
 
         // Define the image URL
@@ -50,10 +51,10 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
         // Send the movie information along with the poster image
         await conn.sendMessage(from, {
             image: { url: imageUrl },
-            caption: `${movieInfo}\n> ©ᴘᴏᴡᴇʀᴇᴅ ʙʏ Jᴀᴡᴀᴅ TᴇᴄʜX`
+            caption: `${movieInfo}\n> HANS BYTE MD`
         }, { quoted: mek });
     } catch (e) {
         console.log(e);
-        reply(`❌ Error: ${e.message}`);
+        reply(`❌ єяяσя: ${e.message}`);
     }
 });

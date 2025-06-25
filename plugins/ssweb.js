@@ -1,54 +1,40 @@
-// code by ⿻ ⌜ 𝐊𝐇𝐀𝐍 ⌟⿻⃮͛🇵🇰𖤐
-
-const axios = require("axios");
-const config = require('../config');
-const { cmd } = require('../command');
+const { cmd, commands } = require('../command'); // Ensure the path is correct
+const fetch = require('node-fetch');
+const g_i_s = require('g-i-s');
 
 cmd({
-  pattern: "sss",
-  alias: ["ssweb"],
-  react: "💫",
-  desc: "Download screenshot of a given link.",
-  category: "other",
-  use: ".ss <link>",
-  filename: __filename,
-}, 
-async (conn, mek, m, {
-  from, l, quoted, body, isCmd, command, args, q, isGroup, sender, 
-  senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, 
-  groupMetadata, groupName, participants, isItzcp, groupAdmins, 
-  isBotAdmins, isAdmins, reply 
-}) => {
-  if (!q) {
-    return reply("Please provide a URL to capture a screenshot.");
-  }
-
-  try {
-    // created by jawad tech 
-    const response = await axios.get(`https://api.davidcyriltech.my.id/ssweb?url=${q}`);
-    const screenshotUrl = response.data.screenshotUrl;
-
-    // give credit and use
-    const imageMessage = {
-      image: { url: screenshotUrl },
-      caption: "*WEB SS DOWNLOADER*\n\n> *© Powered By JawadTechX*",
-      contextInfo: {
-        mentionedJid: [m.sender],
-        forwardingScore: 999,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: '120363354023106228@newsletter',
-          newsletterName: "JawadTechX",
-          serverMessageId: 143,
-        },
-      },
-    };
-
-    await conn.sendMessage(from, imageMessage, { quoted: m });
-  } catch (error) {
-    console.error(error);
-    reply("Failed to capture the screenshot. Please try again.");
-  }
+    pattern: "ssweb",
+    alias: ["screenshot"],
+    react: "📸",
+    desc: "Capture a screenshot of a website",
+    category: "web-tools",
+    use: '.ssweb <url>',
+    filename: __filename
+},
+async (conn, mek, m, { from, reply, q, sender }) => {
+    if (!q || !q.trim()) {
+        return await reply("Please provide a website URL!");
+    }
+    
+    try {
+        const apiUrl = `https://apis.davidcyriltech.my.id/ssweb?url=${encodeURIComponent(q)}&device=tablet`;
+        
+        // Newsletter context info
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+        
+        await conn.sendMessage(from, { image: { url: apiUrl }, caption: `Screenshot of ${q}`, contextInfo: newsletterContext }, { quoted: mek });
+        
+    } catch (error) {
+        console.error(error);
+        reply('An error occurred while processing your request. Please try again later.');
+    }
 });
-
-// ⿻ ⌜ 𝐊𝐇𝐀𝐍 ⌟⿻⃮͛🇵🇰𖤐

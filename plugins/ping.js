@@ -1,62 +1,54 @@
 const config = require('../config');
-const { cmd, commands } = require('../command');
+const { cmd } = require('../command');
+const { runtime } = require('../lib/functions');
 
 cmd({
-    pattern: "ping",
-    alias: ["speed","pong"],use: '.ping',
+    pattern: "pong",
+    alias: ["🚀", "pong"],
+    use: '.ping4',
     desc: "Check bot's response time.",
     category: "main",
     react: "⚡",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, reply }) => {
+async (conn, mek, m, { from, quoted, sender, reply }) => {
     try {
-        const startTime = Date.now();
+        const start = Date.now();
 
-        // Add a short delay
-        await new Promise(resolve => setTimeout(resolve, 100)); // 100ms delay
+        // Emojis for spice
+        const reactionEmojis = ['⚡', '🚀', '🔥', '💨', '✨'];
+        const chosenReact = reactionEmojis[Math.floor(Math.random() * reactionEmojis.length)];
 
-        const endTime = Date.now();
-        const ping = endTime - startTime;
+        // Send reaction emoji
+        await conn.sendMessage(from, {
+            react: { text: chosenReact, key: mek.key }
+        });
 
-        // Send the ping result
-        await conn.sendMessage(from, { 
-            text: `*⚡ KHAN-MD SPEED: ${ping}ms*`, 
+        const end = Date.now();
+        const responseTime = end - start;
+
+        const uptime = runtime(process.uptime());
+        const finalMsg = `*👋 HELLO @${sender.split('@')[0]}!*
+        
+*🤖 BOT IS ONLINE!*
+*📡 PING:* \`${responseTime} MS\`
+*⏱ UPTIME:* \`${uptime}\`
+
+🔹 *HANS BYTE*
+`;
+
+        await conn.sendMessage(from, {
+            text: finalMsg,
             contextInfo: {
-                mentionedJid: [m.sender],
+                mentionedJid: [sender],
                 forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363354023106228@newsletter',
-                    newsletterName: 'JawadTechX',
-                    serverMessageId: 143
-                }
+                isForwarded: true
             }
         }, { quoted: mek });
+
     } catch (e) {
-        console.error(e);
-        reply(`An error occurred: ${e.message}`);
+        console.error("Ping command error:", e);
+        reply(`❌ Error: ${e.message}`);
     }
 });
-
-// ping2 
-
-cmd({
-    pattern: "ping2",
-    desc: "Check bot's response time.",
-    category: "main",
-    react: "🍂",
-    filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        const startTime = Date.now()
-        const message = await conn.sendMessage(from, { text: '*PINGING...*' })
-        const endTime = Date.now()
-        const ping = endTime - startTime
-        await conn.sendMessage(from, { text: `*🔥 KHAN-MD SPEED : ${ping}ms*` }, { quoted: message })
-    } catch (e) {
-        console.log(e)
-        reply(`${e}`)
-    }
-})
+  

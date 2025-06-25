@@ -1,1 +1,252 @@
-function _0x2554(_0x20e522,_0x376f43){const _0x14be90=_0x14be();return _0x2554=function(_0x2554a3,_0x26d82b){_0x2554a3=_0x2554a3-0x76;let _0x2e975f=_0x14be90[_0x2554a3];return _0x2e975f;},_0x2554(_0x20e522,_0x376f43);}const _0x236a0e=_0x2554;(function(_0x208404,_0x4c3cd7){const _0x2f3de8=_0x2554,_0x3efb0e=_0x208404();while(!![]){try{const _0x1eb4b2=-parseInt(_0x2f3de8(0x81))/0x1+-parseInt(_0x2f3de8(0x7b))/0x2+parseInt(_0x2f3de8(0x7d))/0x3*(parseInt(_0x2f3de8(0x8b))/0x4)+parseInt(_0x2f3de8(0x87))/0x5+-parseInt(_0x2f3de8(0x85))/0x6*(parseInt(_0x2f3de8(0x88))/0x7)+-parseInt(_0x2f3de8(0x7a))/0x8+-parseInt(_0x2f3de8(0x7f))/0x9*(-parseInt(_0x2f3de8(0x76))/0xa);if(_0x1eb4b2===_0x4c3cd7)break;else _0x3efb0e['push'](_0x3efb0e['shift']());}catch(_0x4e90fe){_0x3efb0e['push'](_0x3efb0e['shift']());}}}(_0x14be,0xa06c7));function _0x14be(){const _0x3db304=['Error\x20fetching\x20quote:','16202bDTCdM','error','../command','fun','1500JhmxQM','quote','480310bpemho','26481zHWCqI','data','https://api.quotable.io/random','452VlWhmV','2368450JYFAUX','axios','\x0a>\x20*QUOTES\x20BY\x20KHAN\x20MD*\x0a\x20\x20\x20\x20\x20\x20\x20\x20','Get\x20a\x20random\x20inspiring\x20quote.','853424fvXkUZ','2392190TPGZbh','\x22\x0a-\x20','5853kDNfoj','content','99OuNsjV'];_0x14be=function(){return _0x3db304;};return _0x14be();}const axios=require(_0x236a0e(0x77)),{cmd}=require(_0x236a0e(0x83));cmd({'pattern':_0x236a0e(0x86),'desc':_0x236a0e(0x79),'category':_0x236a0e(0x84),'react':'💬','filename':__filename},async(_0x237929,_0x10ef1c,_0x304915,{from:_0x24aa1d,reply:_0x31a8bd})=>{const _0x239ea0=_0x236a0e;try{const _0x33914b=await axios['get'](_0x239ea0(0x8a)),_0x26063f=_0x33914b[_0x239ea0(0x89)],_0x25a0d1='\x0a💬\x20\x22'+_0x26063f[_0x239ea0(0x7e)]+_0x239ea0(0x7c)+_0x26063f['author']+_0x239ea0(0x78);return _0x31a8bd(_0x25a0d1);}catch(_0x50410a){console[_0x239ea0(0x82)](_0x239ea0(0x80),_0x50410a),_0x31a8bd('aby\x20coding\x20ma\x20koi\x20error\x20hai\x20fix\x20kr');}});
+const { cmd } = require('../command');
+const { fetchJson } = require('../lib/functions');
+const axios = require('axios');
+const config = require('../config');
+
+cmd({
+    pattern: "jokes",
+    desc: "Fetch a random joke",
+    category: "fun",
+    react: "😂",
+    filename: __filename
+}, async (conn, mek, m, { reply, sender, from }) => {
+    try {
+        let res = await fetchJson("https://official-joke-api.appspot.com/random_joke");
+        let imageUrl = "https://i.ibb.co/PS5DZdJ/Chat-GPT-Image-Mar-30-2025-12-53-39-PM.png";
+
+        if (res && res.setup && res.punchline) {
+            const jokeMessage = `${res.setup}\n\n👉 ${res.punchline}`;
+            
+            const newsletterContext = {
+                mentionedJid: [sender],
+                forwardingScore: 1000,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363292876277898@newsletter',
+                    newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                    serverMessageId: 143,
+                },
+            };
+
+            await conn.sendMessage(from, {
+                image: { url: imageUrl },
+                caption: jokeMessage,
+                contextInfo: newsletterContext,
+            }, { quoted: mek });
+        } else {
+            return reply("Couldn't fetch a joke at the moment. Try again later!");
+        }
+    } catch (e) {
+        console.error(e);
+        return reply(`Error: ${e.message || e}`);
+    }
+});
+
+cmd({
+    pattern: "quote",
+    desc: "Get a random motivational quote.",
+    category: "other",
+    react: "💡",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, sender }) => {
+    try {
+        const response = await axios.get('https://apis.davidcyriltech.my.id/random/quotes');
+        const data = response.data;
+        let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
+
+        if (!data.success) {
+            return reply("❌ Failed to fetch a quote. Please try again.");
+        }
+
+        const quoteMessage = `💬 *Quote of the Day* 💬\n\n_\"${data.response.quote}\"_\n\n- *${data.response.author}*`;
+        
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: quoteMessage,
+            contextInfo: newsletterContext,
+        }, { quoted: mek });
+    } catch (error) {
+        console.error("Error fetching quote:", error);
+        reply(`❌ Error: ${error.message}`);
+    }
+});
+
+cmd({
+    pattern: "pickupline",
+    desc: "Get a random pick-up line.",
+    category: "other",
+    react: "💡",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, sender }) => {
+    try {
+        const response = await axios.get('https://apis.davidcyriltech.my.id/pickupline');
+        const data = response.data;
+        let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
+
+        if (!data.success) {
+            return reply("❌ Failed to fetch a pick-up line. Please try again.");
+        }
+
+        // Use correct property name
+        const quoteMessage = `💬 *PICKUPLINE of the Day* 💬\n\n_\"${data.pickupline}\"_\n\n`;
+        
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: quoteMessage,
+            contextInfo: newsletterContext,
+        }, { quoted: mek });
+    } catch (error) {
+        console.error("Error fetching pick-up line:", error);
+        reply(`❌ Error: ${error.message}`);
+    }
+});
+
+
+cmd({
+    pattern: "advice",
+    desc: "Get a random advice.",
+    category: "other",
+    react: "💡",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, sender }) => {
+    try {
+        const response = await axios.get('https://api.giftedtech.web.id/api/fun/advice?apikey=gifted');
+        const data = response.data;
+
+        let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
+
+        if (!data.success) {
+            return reply("❌ Failed to fetch advice. Please try again.");
+        }
+
+        const quoteMessage = `💬 *Advice of the Day* 💬\n\n_\"${data.result}\"_\n\n`;
+
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: quoteMessage,
+            contextInfo: newsletterContext,
+        }, { quoted: mek });
+
+    } catch (error) {
+        console.error("Error fetching advice:", error);
+        reply(`❌ Error: ${error.message}`);
+    }
+});
+
+cmd({
+    pattern: "goodnight",
+    desc: "Send a random good night message.",
+    category: "other",
+    react: "🌙",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, sender }) => {
+    try {
+        const response = await axios.get('https://api.giftedtech.web.id/api/fun/goodnight?apikey=gifted');
+        const data = response.data;
+
+        let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
+
+        if (!data.success) {
+            return reply("❌ Failed to fetch good night wishes. Please try again.");
+        }
+
+        const quoteMessage = `🌌 *Good Night Wishes* 🌌\n\n_\"${data.result}\"_\n\n`;
+
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: quoteMessage,
+            contextInfo: newsletterContext,
+        }, { quoted: mek });
+
+    } catch (error) {
+        console.error("Error fetching good night message:", error);
+        reply(`❌ Error: ${error.message}`);
+    }
+});
+
+cmd({
+    pattern: "motivation",
+    desc: "Get a motivational quote.",
+    category: "other",
+    react: "🔥",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, sender }) => {
+    try {
+        const response = await axios.get('https://api.giftedtech.web.id/api/fun/motivation?apikey=gifted');
+        const data = response.data;
+
+        let imageUrl = "https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png";
+
+        if (!data.success) {
+            return reply("❌ Failed to fetch motivation quote. Please try again.");
+        }
+
+        const quoteMessage = `💪 *Motivational Quote* 💪\n\n_\"${data.result}\"_\n\n`;
+
+        const newsletterContext = {
+            mentionedJid: [sender],
+            forwardingScore: 1000,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363292876277898@newsletter',
+                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                serverMessageId: 143,
+            },
+        };
+
+        await conn.sendMessage(from, {
+            image: { url: imageUrl },
+            caption: quoteMessage,
+            contextInfo: newsletterContext,
+        }, { quoted: mek });
+
+    } catch (error) {
+        console.error("Error fetching motivational quote:", error);
+        reply(`❌ Error: ${error.message}`);
+    }
+});
+

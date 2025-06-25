@@ -1,6 +1,6 @@
-name: khan-ai
+name: hans-byte
 services:
-  - name: khan-ai-service
+  - name: hans-byte-service
     type: web
     ports:
       - 5000

@@ -1,7 +1,16 @@
 FROM node:lts-buster
-RUN git clone https://github.com/JawadYTX/KHAN-MD/root/ikJawad
-WORKDIR /root/ikJawad
-RUN npm install && npm install -g pm2 || yarn install --network-concurrency 1
-COPY . .
+
+# Clone your GitHub repository into /root/hansbyte
+RUN git clone https://github.com/HaroldMth/HANS_BYTE_MD_MD /root/hansbyte
+
+# Set working directory
+WORKDIR /root/hansbyte
+
+# Install dependencies and pm2 globally
+RUN npm install && npm install -g pm2
+
+# Expose the port your app listens on
 EXPOSE 9090
+
+# Start the app
 CMD ["npm", "start"]

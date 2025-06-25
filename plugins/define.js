@@ -1,41 +1,35 @@
-const axios = require('axios');
-                         const {cmd , commands} = require('../command');
+const { cmd } = require('../command');
+const fetch = require('node-fetch');
 
-                         cmd({
-                             pattern: "define",
-                             desc: "📚 Get the definition of a word",
-                             react: "🔍",
-                             category: "Auther",
-                             filename: __filename
-                         },
-                         async (conn, mek, m, { from, q, reply }) => {
-                             try {
-                                 if (!q) return reply("❗ Please provide a word to define. Usage: .define [word]");
+cmd({
+    pattern: "define",
+    react: "📖",
+    desc: "Search for a word definition on Urban Dictionary",
+    category: "tools",
+    filename: __filename
+}, async (conn, mek, m, { args, from }) => {
+    try {
+        if (!args.length) throw new Error('Please provide a word to search for.');
 
-                                 const word = q;
-                                 const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
+        const query = args.join(' ');
+        console.log(`[INFO] Searching definition for: ${query}`);
 
-                                 const response = await axios.get(url);
-                                 const definitionData = response.data[0];
+        const url = `https://api.urbandictionary.com/v0/define?term=${encodeURIComponent(query)}`;
+        const response = await fetch(url);
+        const json = await response.json();
 
-                                 const definition = definitionData.meanings[0].definitions[0].definition;
-                                 const example = definitionData.meanings[0].definitions[0].example || 'No example available';
-                                 const synonyms = definitionData.meanings[0].definitions[0].synonyms.join(', ') || 'No synonyms available';
+        if (!response.ok) throw new Error(`An error occurred: ${json.message}`);
+        if (!json.list.length) throw new Error('Word not found in the dictionary.');
 
-const wordInfo = `
-📚 *Word*: ${definitionData.word}
-🔍 *Definition*: ${definition}
-📝 *Example*: ${example}
-🔗 *Synonyms*: ${synonyms}
+        const firstEntry = json.list[0];
+        const definition = firstEntry.definition.replace(/\[/g, '').replace(/\]/g, ''); // Clean up brackets
+        const example = firstEntry.example ? `\n\n*Example:* ${firstEntry.example}` : '';
 
-> *@ Powered By Jawad Tech X*`;
+        const message = `📖 *Word:* ${query}\n\n*Definition:* ${definition}${example}`;
+        await conn.sendMessage(from, { text: message }, { quoted: mek });
 
-                                 return reply(wordInfo);
-                             } catch (e) {
-                                 console.log(e);
-                                 if (e.response && e.response.status === 404) {
-                                     return reply("🚫 Word not found. Please check the spelling and try again.");
-                                 }
-                                 return reply("⚠️ An error occurred while fetching the definition. Please try again later.");
-                             }
-                         });
+    } catch (error) {
+        console.error("[ERROR] define command:", error);
+        await conn.sendMessage(from, { text: `Error: ${error.message}` }, { quoted: mek });
+    }
+});
