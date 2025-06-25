@@ -6,7 +6,7 @@ const {
   getContentType,
   fetchLatestBaileysVersion,
   Browsers,
-} = require('@whiskeysockets/baileys');
+} = require("@whiskeysockets/baileys");
 
 const l = console.log;
 const {
@@ -35,13 +35,13 @@ const prefix = config.PREFIX;
 })();
 
 
-const ownerNumber = config.OWNER_NUM;
+const ownerNumber = config.OWNER_NUMBER;
 
 //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + "/sessions/creds.json")) {
   if (!config.SESSION_ID)
     return console.log("Please add your session to SESSION_ID env !!");
-  const sessdata = config.SESSION_ID.replace('HANS-BYTE~', '');
+  const sessdata = config.SESSION_ID.replace('HANS-BYTE~ ', '');
   const filer = File.fromURL(`https://mega.nz/file/${sessdata}`);
   filer.download((err, data) => {
     if (err) throw err;
@@ -79,84 +79,74 @@ async function connectToWA() {
     version,
   });
 
-robin.ev.on("connection.update", (update) => {
-  const { connection, lastDisconnect } = update;
+  robin.ev.on("connection.update", (update) => {
+    const { connection, lastDisconnect } = update;
+    if (connection === "close") {
+      if (
+        lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut
+      ) {
+        connectToWA();
+      }
+    } else if (connection === "open") {
+      console.log(" Installing... ");
+      const path = require("path");
+      fs.readdirSync("./plugins/").forEach((plugin) => {
+        if (path.extname(plugin).toLowerCase() == ".js") {
+          require("./plugins/" + plugin);
+        }
+      });
+      console.log("ALL PLUGINS SUCCESFULLY INSTALLED   ✅");
+      console.log("HANS BYTE HAS SUCCESFULLY BEEN CONNECTED TO YOUR WHATSAPP ✅");
 
-  if (connection === "close") {
-    if (
-      lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut
-    ) {
-      connectToWA();
+      let up = `
+  ╔═════════════════╗
+  ║      𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 X 𝐁𝐎𝐓           
+  ║  SUCCESSFULLY CONNECTED ✅ 😍        
+  ╠═════════════════╣
+  ║      • PREFIX: .            
+  ╟─────────────────╢
+  ║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 𝐋𝐈𝐍𝐊         
+  ║ https://whatsapp.com/channel/0029VaZDIdxDTkKB4JSWUk1O              
+  ╟─────────────────╢
+  ║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐆𝐑𝐎𝐔𝐏 𝐋𝐈𝐍𝐊          
+  ║ https://chat.whatsapp.com/K0GPSSfr16j8VsIAU8uHYM                 
+  ╠═════════════════╣
+  ║   𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃               
+  ║ > © ᴘᴏᴡᴇʀᴇᴅ ʙʏ Hans Tech Team        
+  ╚═════════════════╝`;
+      let up1 = `Hello Mr Hans i succesfully deployed HANS BYTE`;
+
+      robin.sendMessage(ownerNumber + "@s.whatsapp.net", {
+        image: {
+          url: `https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png`,
+        },
+        caption: up,
+      });
+      robin.sendMessage("237696900612@s.whatsapp.net", {
+        image: {
+          url: `https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png`,
+        },
+        caption: up1,
+      });
     }
-  } else if (connection === "open") {
-    console.log("Connected!");
-
-    const path = require("path");
-    fs.readdirSync("./plugins/").forEach((plugin) => {
-      if (path.extname(plugin).toLowerCase() === ".js") {
-        require("./plugins/" + plugin);
-      }
-    });
-    console.log("ALL PLUGINS SUCCESFULLY INSTALLED   ✅");
-    console.log("HANS BYTE HAS SUCCESFULLY BEEN CONNECTED TO YOUR WHATSAPP ✅");
-
-    let up = `
-╔═════════════════╗
-║      𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 X 𝐁𝐎𝐓           
-║  SUCCESSFULLY CONNECTED ✅ 😍        
-╠═════════════════╣
-║      • PREFIX: .            
-╟─────────────────╢
-║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐂𝐇𝐀𝐍𝐍𝐄𝐋 𝐋𝐈𝐍𝐊         
-║ https://whatsapp.com/channel/0029VaZDIdxDTkKB4JSWUk1O              
-╟─────────────────╢
-║ ♻ 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐆𝐑𝐎𝐔𝐏 𝐋𝐈𝐍𝐊          
-║ https://chat.whatsapp.com/K0GPSSfr16j8VsIAU8uHYM                 
-╠═════════════════╣
-║   𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃               
-║ > © ᴘᴏᴡᴇʀᴇᴅ ʙʏ Hans Tech Team        
-╚═════════════════╝`;
-    let up1 = `Hello Mr Hans i succesfully deployed HANS BYTE`;
-
-    setTimeout(async () => {
-      try {
-        await robin.sendMessage(ownerNumber + "@s.whatsapp.net", {
-          image: {
-            url: `https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png`,
-          },
-          caption: up,
-        });
-      } catch (err) {
-        console.error("Failed to send owner message:", err);
-      }
-
-      try {
-        await robin.sendMessage("237696900612@s.whatsapp.net", {
-          image: {
-            url: `https://i.ibb.co/6Rxhg321/Chat-GPT-Image-Mar-30-2025-03-39-42-AM.png`,
-          },
-          caption: up1,
-        });
-      } catch (err) {
-        console.error("Failed to send second message:", err);
-      }
-    }, 4000);
-  }
-});
-
-robin.ev.on("creds.update", saveCreds);
-
-robin.ev.on("messages.upsert", async (mek) => {
-  mek = mek.messages[0];
-  if (!mek.message) return;
-  mek.message =
-    getContentType(mek.message) === "ephemeralMessage"
-      ? mek.message.ephemeralMessage.message
-      : mek.message;
-
+  });
+  robin.ev.on("creds.update", saveCreds);
+  robin.ev.on("messages.upsert", async (mek) => {
+    mek = mek.messages[0];
+    if (!mek.message) return;
+    mek.message =
+      getContentType(mek.message) === "ephemeralMessage"
+        ? mek.message.ephemeralMessage.message
+        : mek.message;
 //================================================================================================//h
 
-   const m = sms(robin, mek);
+//=================================================================================================//
+
+
+
+
+    
+    const m = sms(robin, mek);
     const type = getContentType(mek.message);
     const content = JSON.stringify(mek.message);
     const from = mek.key.remoteJid;
@@ -185,15 +175,15 @@ robin.ev.on("messages.upsert", async (mek) => {
     const sender = mek.key.fromMe
       ? robin.user.id.split(":")[0] + "@s.whatsapp.net" || robin.user.id
       : mek.key.participant || mek.key.remoteJid;
-   const senderNumber = sender.split("@")[0];
-const botNumber = robin.user.id.split(":")[0];
-const pushname = mek.pushName || "HANS USERe";
-const isMe = botNumber.includes(senderNumber);
-const isOwner = (Array.isArray(ownerNumber) && ownerNumber.includes(senderNumber)) || isMe;
-const botNumber2 = await jidNormalizedUser(robin.user.id);
-const groupMetadata = isGroup
-  ? await robin.groupMetadata(from).catch((e) => {})
-  : "";
+    const senderNumber = sender.split("@")[0];
+    const botNumber = robin.user.id.split(":")[0];
+    const pushname = mek.pushName || "Sin Nombre";
+    const isMe = botNumber.includes(senderNumber);
+    const isOwner = ownerNumber.includes(senderNumber) || isMe;
+    const botNumber2 = await jidNormalizedUser(robin.user.id);
+    const groupMetadata = isGroup
+      ? await robin.groupMetadata(from).catch((e) => {})
+      : "";
     const groupName = isGroup ? groupMetadata.subject : "";
     const participants = isGroup ? await groupMetadata.participants : "";
     const groupAdmins = isGroup ? await getGroupAdmins(participants) : "";
